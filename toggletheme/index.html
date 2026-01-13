@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Theme Toggle</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light {
+      background: #ffffff;
+      color: #000000;
+    }
+
+    body.dark {
+      background: #121212;
+      color: #ffffff;
+    }
+
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="toggleTheme">Toggle Theme</button>
+
+  <script src="script.js"></script>
+</body>
+</html>

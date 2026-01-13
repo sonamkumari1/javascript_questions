@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Character Count</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 30px;
+      }
+      textarea {
+        width: 300px;
+        height: 100px;
+      }
+      .counter{
+        margin-top: 8px;
+        font-size: 14px;
+      }
+      .warning{
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Character Counter</h3>
+
+    <textarea id="textInput" maxlength="100"></textarea>
+    <div class="counter" id="counter">100 character remaining</div>
+    <script src="script.js"></script>
+  </body>
+</html>
