@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>File Explorer - JS</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+    .node {
+      margin-left: 20px;
+    }
+    .folder {
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button {
+      margin-left: 5px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<h3>File Explorer (JavaScript)</h3>
+<div id="explorer"></div>
+
+<script>
+  let data = {
+    name: "root",
+    type: "folder",
+    open: true,
+    children: []
+  };
+
+  function render(node, parent) {
+    const container = document.createElement("div");
+    container.className = "node";
+
+    if (node.type === "folder") {
+      const header = document.createElement("div");
+
+      const toggleBtn = document.createElement("button");
+      toggleBtn.textContent = node.open ? "-" : "+";
+      toggleBtn.onclick = () => {
+        node.open = !node.open;
+        refresh();
+      };
+
+      const name = document.createElement("span");
+      name.textContent = " 📁 " + node.name;
+      name.className = "folder";
+
+      const addFileBtn = document.createElement("button");
+      addFileBtn.textContent = "+File";
+      addFileBtn.onclick = () => {
+        const fileName = prompt("File name?");
+        if (fileName) {
+          node.children.push({ name: fileName, type: "file" });
+          refresh();
+        }
+      };
+
+      const addFolderBtn = document.createElement("button");
+      addFolderBtn.textContent = "+Folder";
+      addFolderBtn.onclick = () => {
+        const folderName = prompt("Folder name?");
+        if (folderName) {
+          node.children.push({
+            name: folderName,
+            type: "folder",
+            open: false,
+            children: []
+          });
+          refresh();
+        }
+      };
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "❌";
+      deleteBtn.onclick = () => {
+        deleteNode(data, node);
+        refresh();
+      };
+
+      header.append(toggleBtn, name, addFileBtn, addFolderBtn);
+      if (node !== data) header.append(deleteBtn);
+
+      container.appendChild(header);
+
+      if (node.open) {
+        node.children.forEach(child => render(child, container));
+      }
+    } else {
+      const file = document.createElement("div");
+      file.textContent = "📄 " + node.name;
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "❌";
+      deleteBtn.onclick = () => {
+        deleteNode(data, node);
+        refresh();
+      };
+
+      file.appendChild(deleteBtn);
+      container.appendChild(file);
+    }
+
+    parent.appendChild(container);
+  }
+
+  function deleteNode(parent, target) {
+    if (!parent.children) return;
+    parent.children = parent.children.filter(child => child !== target);
+    parent.children.forEach(child => deleteNode(child, target));
+  }
+
+  function refresh() {
+    const root = document.getElementById("explorer");
+    root.innerHTML = "";
+    render(data, root);
+  }
+
+  refresh();
+</script>
+
+</body>
+</html>
