@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tabs - JS</title>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+      }
+      .tab {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        background: #f5f5f5;
+      }
+      .tab[aria-selected="true"] {
+        background: #fff;
+        border-bottom: 2px solid #007bff;
+        font-weight: bold;
+      }
+      .panel {
+        border: 1px solid #ccc;
+        padding: 12px;
+        margin-top: 10px;
+      }
+      .panel[hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Tabs Component (JavaScript)</h3>
+
+    <div class="tabs" role="tablist">
+      <button
+        class="tab"
+        role="tab"
+        aria-selected="true"
+        tabindex="0"
+        aria-controls="panel-1"
+      >
+        Tab 1
+      </button>
+      <button
+        class="tab"
+        role="tab"
+        aria-selected="false"
+        tabindex="-1"
+        aria-controls="panel-2"
+      >
+        Tab 2
+      </button>
+      <button
+        class="tab"
+        role="tab"
+        aria-selected="false"
+        tabindex="-1"
+        aria-controls="panel-3"
+      >
+        Tab 3
+      </button>
+    </div>
+
+    <div id="panel-1" class="panel" role="tabpanel">Content for Tab 1</div>
+    <div id="panel-2" class="panel" role="tabpanel" hidden>
+      Content for Tab 2
+    </div>
+    <div id="panel-3" class="panel" role="tabpanel" hidden>
+      Content for Tab 3
+    </div>
+
+    <script>
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      const panels = Array.from(document.querySelectorAll(".panel"));
+
+      function activateTab(index, focus = true) {
+        tabs.forEach((tab, i) => {
+          const selected = i === index;
+          tab.setAttribute("aria-selected", selected);
+          tab.tabIndex = selected ? 0 : -1;
+          if (focus && selected) tab.focus();
+          panels[i].hidden = !selected;
+        });
+      }
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener("click", () => activateTab(i));
+        tab.addEventListener("keydown", (e) => {
+          let next = i;
+          if (e.key === "ArrowRight") next = (i + 1) % tabs.length;
+          if (e.key === "ArrowLeft") next = (i - 1 + tabs.length) % tabs.length;
+          if (e.key === "Home") next = 0;
+          if (e.key === "End") next = tabs.length - 1;
+          if (
+            ["ArrowRight", "ArrowLeft", "Home", "End", "Enter", " "].includes(
+              e.key
+            )
+          ) {
+            e.preventDefault();
+            activateTab(next);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

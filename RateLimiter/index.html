@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Throttle - JS</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    button { padding: 10px 15px; }
+  </style>
+</head>
+<body>
+
+<h3>Throttle Example (JavaScript)</h3>
+<button id="btn">Click fast!</button>
+<p>Open console to see output</p>
+
+<script>
+  function throttle(fn, delay) {
+    let lastCall = 0;
+
+    return function (...args) {
+      const now = Date.now();
+
+      if (now - lastCall >= delay) {
+        lastCall = now;
+        fn(...args);
+      }
+    };
+  }
+
+  function handleClick() {
+    console.log("Button clicked at", new Date().toLocaleTimeString());
+  }
+
+  const throttledClick = throttle(handleClick, 2000);
+
+  document.getElementById("btn").addEventListener("click", throttledClick);
+</script>
+
+</body>
+</html>

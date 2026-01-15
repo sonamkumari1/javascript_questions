@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Infinite Scroll - Fixed</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    #container {
+      height: 400px;          /* IMPORTANT */
+      overflow-y: auto;       /* IMPORTANT */
+      border: 1px solid #ccc;
+    }
+
+    .item {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .loader {
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h3>Infinite Scroll (JS - Fixed)</h3>
+
+<div id="container">
+  <div id="list"></div>
+  <div class="loader" id="loader">Loading...</div>
+</div>
+
+<script>
+  const container = document.getElementById("container");
+  const list = document.getElementById("list");
+  const loader = document.getElementById("loader");
+
+  let page = 0;
+  const limit = 10;
+  let loading = false;
+  let hasMore = true;
+
+  async function fetchData() {
+    if (loading || !hasMore) return;
+
+    loading = true;
+    loader.style.display = "block";
+
+    const res = await fetch(
+      `https://dummyjson.com/products?limit=${limit}&skip=${page * limit}`
+    );
+    const data = await res.json();
+
+    if (data.products.length === 0) {
+      hasMore = false;
+      loader.innerText = "🎉 No more data";
+      return;
+    }
+
+    data.products.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerText = item.title;
+      list.appendChild(div);
+    });
+
+    page++;
+    loading = false;
+    loader.style.display = "none";
+  }
+
+  container.addEventListener("scroll", () => {
+    if (
+      container.scrollTop + container.clientHeight >=
+      container.scrollHeight - 10
+    ) {
+      fetchData();
+    }
+  });
+
+  fetchData(); // first load
+</script>
+
+</body>
+</html>

@@ -1,22 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Debounce Search</title>
-     <style>
-        body{
-            font-family: Arial, sans-serif;
-      padding: 40px;
-        }
-     </style>
-</head>
-<body>
-     <h3>Debounce Search</h3>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Debounce Search</title>
+    <style>
+      body {
+        font-family: Arial;
+        padding: 20px;
+      }
+      input {
+        padding: 8px;
+        width: 250px;
+      }
+      li {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Debounce Search</h3>
+    <input type="text" id="search" placeholder="Search users..." />
+    <ul id="results"></ul>
 
-     <input type="text" id="search" placeholder="search users....">
-     <ul id="results"></ul>
+    <script>
+  const input = document.getElementById("search");
+  const results = document.getElementById("results");
 
-     <script src="script.js"></script>
-</body>
+  function debounce(fn, delay) {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delay);
+    };
+  }
+
+  async function fetchUsers(query) {
+    if (!query) {
+      results.innerHTML = "";
+      return;
+    }
+
+    const res = await fetch("https://jsonplaceholder.typicode.com/users");
+    const data = await res.json();
+
+    const filtered = data.filter(user =>
+      user.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    results.innerHTML = filtered
+      .map(user => `<li>${user.name}</li>`)
+      .join("");
+  }
+
+  const debouncedSearch = debounce(fetchUsers, 500);
+
+  input.addEventListener("input", (e) => {
+    debouncedSearch(e.target.value);
+  });
+</script>
+
+  </body>
 </html>
